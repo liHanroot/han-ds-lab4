@@ -18,7 +18,7 @@ public class GatewayController {
 
 
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:8080/api/v1";
+    private final String baseUrl = "http://lab4-gateway.default:8080/api/v1";
 
     public GatewayController(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();
@@ -65,7 +65,7 @@ public class GatewayController {
     @GetMapping(value = "/cars", produces = "application/json")
     public ResponseEntity<PaginationResponse> getCars(@RequestParam(required = false, defaultValue = "0") int page,
                                                       @RequestParam(required = false, defaultValue = "5") int size) {
-        String uri = "http://localhost:8070/api/v1/cars?page={page}&size={size}";
+        String uri = "http://lab4-car.default:8070/api/v1/cars?page={page}&size={size}";
         ResponseEntity<PaginationResponse> paginationResponse = restTemplate.getForEntity(uri, PaginationResponse.class, page, size);
         return ResponseEntity.ok(paginationResponse.getBody());
     }
@@ -73,7 +73,7 @@ public class GatewayController {
     /*成功*/
     @GetMapping(value = "/cars/{carUid}", produces = "application/json")
     public CarResponse getCar(@PathVariable("carUid") UUID carUid) {
-        String uri = "http://localhost:8070/api/v1/cars/{carUid}";
+        String uri = "http://lab4-car.default:8070/api/v1/cars/{carUid}";
         return restTemplate.getForEntity(uri, CarResponse.class, carUid).getBody();
     }
 
@@ -81,7 +81,7 @@ public class GatewayController {
     /*成功*/
     @PostMapping(value = "/payments", consumes = "application/json", produces = "application/json")
     public PaymentResponse createPayment(@RequestBody PaymentRequest paymentRequest) {
-        String uri = "http://localhost:8050/api/v1/payments";
+        String uri = "http://lab4-payment.default:8050/api/v1/payments";
         HttpEntity<PaymentRequest> request = new HttpEntity<>(paymentRequest);
         return restTemplate.postForObject(uri, request, PaymentResponse.class);
     }
@@ -90,7 +90,7 @@ public class GatewayController {
     /*成功*/
     @PutMapping(value = "/payments/{paymentUid}", consumes = "application/json", produces = "application/json")
     public PaymentResponse updatePayment(@PathVariable("paymentUid") UUID paymentUid, @RequestBody PaymentPut paymentPut) {
-        String uri = "http://localhost:8050/api/v1/payments/{paymentUid}";
+        String uri = "http://lab4-payment.default:8050/api/v1/payments/{paymentUid}";
         HttpHeaders headers = createHeader();
         HttpEntity<PaymentPut> entity = new HttpEntity<>(paymentPut, headers);
         return restTemplate.exchange(uri, HttpMethod.PUT, entity, PaymentResponse.class, paymentUid).getBody();
@@ -100,14 +100,14 @@ public class GatewayController {
     /*成功*/
     @GetMapping(value = "/payments/{paymentUid}")
     public PaymentResponse getPayment(@PathVariable("paymentUid") UUID paymentUid) {
-        String uri = "http://localhost:8050/api/v1/payments/{paymentUid}";
+        String uri = "http://lab4-payment.default:8050/api/v1/payments/{paymentUid}";
         return restTemplate.getForObject(uri, PaymentResponse.class, paymentUid);
     }
 
     /*成功了，但是只能根据一个用户查询，修改了扎代码，并添加了返回名字*/
     @GetMapping(value = "/rental")
     public List<RentalShortResponse> getRentals(@RequestHeader("X-User-Name") String xUserName) {
-        String uri = "http://localhost:8060/api/v1/rental";
+        String uri = "http://lab4-rental.default:8060/api/v1/rental";
         HttpHeaders headers = createHeader(xUserName);
         HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
         RentalResponse[] rentalResponses = restTemplate.exchange(uri, HttpMethod.GET, request, RentalResponse[].class).getBody();
@@ -180,7 +180,7 @@ public class GatewayController {
     }
 
     private RentalResponse getRentalLong(String xUserName, UUID rentalUid) {
-        String uri = "http://localhost:8060/api/v1/rental/{rentalUid}";
+        String uri = "http://lab4-rental.default:8060/api/v1/rental/{rentalUid}";
         HttpHeaders headers = createHeader(xUserName);
         HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
         return restTemplate
@@ -209,7 +209,7 @@ public class GatewayController {
         HttpEntity<PaymentPut> paymentRequest = new HttpEntity<>(paymentPut, paymentHeaders);
 
         restTemplate.exchange(baseUrl + "/payments/{paymentUid}", HttpMethod.PUT, paymentRequest, PaymentResponse.class, paymentUid);
-        String uriToDelete = "http://localhost:8060/api/v1/rental/{rentalUid}";
+        String uriToDelete = "http://lab4-rental.default:8060/api/v1/rental/{rentalUid}";
         restTemplate.delete(uriToDelete, rentalUid);
     }
 

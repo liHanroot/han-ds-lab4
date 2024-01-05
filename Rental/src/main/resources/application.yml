@@ -2,7 +2,7 @@ server:
   port: 8060
 spring:
   application.name: rental-service
-  profiles.active: local
+  profiles.active: prod
   jpa:
     properties:
       hibernate:

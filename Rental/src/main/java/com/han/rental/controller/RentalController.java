@@ -26,7 +26,7 @@ public class RentalController {
 
     @GetMapping(value = "/{rentalUid}", produces = "application/json")
     public RentalResponse getRental(@RequestHeader("X-User-Name") String xUserName,
-                                         @PathVariable("rentalUid") UUID rentalUid) {
+                                    @PathVariable("rentalUid") UUID rentalUid) {
         return rentalService.getRental(rentalUid);
     }
 

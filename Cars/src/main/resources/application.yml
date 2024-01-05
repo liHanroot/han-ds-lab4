@@ -2,7 +2,7 @@ server:
   port: 8070
 spring:
   application.name: car-service
-  profiles.active: local
+  profiles.active: prod
   jpa:
     properties:
       hibernate:
